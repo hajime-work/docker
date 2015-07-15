@@ -1,0 +1,51 @@
+// vim: set ft=Dockerfile :
+//-------------------------------------------
+// アークリナックスに最低限の設定を施す
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+FROM archlinux/mini
+MAINTAINER __MAINTAINER__
+
+// 標準装備アプリケーションをインストール
+RUN pacman -Sy --noconfirm \
+            base \
+            base-devel \
+            curl \
+            wget \
+            git \
+            svn \
+            ctags \
+            vim \
+            libunistring \
+            zsh \
+            zsh-completions \
+            tmux \
+            libidn \
+            openssh \
+            openssl \
+            dnsutils \
+            lsof \
+            pkgfile \
+            pv \
+            openssh; pacman-db-upgrade; pkgfile -u
+
+// APACMAN
+ADD files/archlinux/pacman /pacman
+RUN pacman -U /pacman/apacman-1.8-2-any.pkg.tar.xz --noconfirm 
+RUN rm -rf /pacman
+
+
+// エントリーポイント向けのスタートアップ
+ADD shell/init.sh /builtin/init.sh
+RUN chmod 755 /builtin/init.sh
+RUN mkdir /startup
+
+ENV TERM=xterm
+
+ENTRYPOINT ["/builtin/init.sh"]
+
+// vim: set ft=Dockerfile :

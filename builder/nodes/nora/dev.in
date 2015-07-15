@@ -1,0 +1,21 @@
+// vim: set ft=dockerfile :
+//----------------------------------------
+//  開発用のノラ
+//-----------------------------------
+//
+//===================================
+
+FROM nora/app
+
+//===========================================
+// サービス起動スクリプトの追加
+//===========================================
+RUN pacman -S --noconfirm cscope mariadb-clients
+
+// SSH
+ADD files/init/ssh.sh /startup/
+ADD files/supervisor.d/ssh.ini /etc/supervisor.d/
+
+
+// コマンド
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]

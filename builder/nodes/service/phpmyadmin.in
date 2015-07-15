@@ -1,0 +1,28 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// PHP MYADMIN
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+FROM archlinux/base
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
+// インストール
+RUN pacman -Syy --noconfirm php mariadb-clients unzip
+
+RUN wget -O phpMyAdmin.zip 'https://phpmyadmin-downloads-532693.c.cdn77.org/phpMyAdmin/4.4.9/phpMyAdmin-4.4.9-all-languages.zip'
+RUN unzip phpMyAdmin
+WORKDIR "/phpMyAdmin-4.4.9-all-languages"
+ENV PHPMYADMIN_DIR /phpMyAdmin-4.4.9-all-languages
+
+RUN echo 'date.timezone = "Asia/Tokyo"' >> /etc/php/php.ini
+
+VOLUME ['/phpMyAdmin-4.4.9-all-languages/config.inc.php']
+
+ADD files/init/phpmyadmin.sh /startup/
+
+CMD ["php", "-S 0.0.0.0:80"]

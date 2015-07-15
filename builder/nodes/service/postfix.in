@@ -1,0 +1,32 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// POSTFIX (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+FROM archlinux/base
+
+
+// インストール
+RUN pacman -Syy --noconfirm postfix rsyslog cyrus-sasl
+
+// ディレクトリをエクスポート
+VOLUME ["/etc/postfix", "/var/log"]
+
+// SPF
+RUN apacman -Sy
+RUN apacman -S python-postfix-policyd-spf --noconfirm
+
+// OpenDkim
+RUN pacman -S opendkim --noconfirm
+
+// Clamav
+RUN pacman -S clamav --noconfirm 
+
+ADD files/init/postfix.sh /startup/
+
+// コマンド
+CMD ["tail", "-f", "/var/log/mail.*"]

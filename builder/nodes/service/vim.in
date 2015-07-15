@@ -1,0 +1,16 @@
+// vim: set ft=dockerfile :
+//===================================
+// VIM
+//-----------------------------------
+//
+//
+//===================================
+
+// Archlinuxのベースとなる
+FROM archlinux/base
+
+ENV LANG=ja_JP.utf8
+ENV TERM=xterm-256color
+
+// コマンド
+ENTRYPOINT ["vim"]

@@ -1,0 +1,21 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// REDIS (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+FROM archlinux/base
+
+// インストール
+RUN pacman -Syy --noconfirm redis
+
+// ディレクトリをエクスポート
+VOLUME ["/var/log/redis"]
+
+ADD files/init/redis.sh /startup/
+
+// コマンド
+CMD ["/usr/sbin/redis-server", "/etc/redis.conf"]

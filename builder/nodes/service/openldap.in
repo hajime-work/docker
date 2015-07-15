@@ -1,0 +1,24 @@
+// vim: set ft=dockerfile :
+//===================================
+// Openldap
+//-----------------------------------
+//
+//
+//===================================
+
+// Archlinuxのベースとなる
+FROM archlinux/supervisor
+
+// 使用するアプリケーションのインストール
+RUN pacman -Sy --noconfirm openldap
+
+// LDAP
+ADD files/supervisor.d/openldap.ini /etc/supervisor.d/
+ADD files/init/openldap.sh /startup/
+RUN cp /etc/openldap/slapd.conf /etc/openldap/slapd.conf.dist
+
+VOLUME ['/etc/openldap/slapd.d', '/var/lib/openldap/openldap-data']
+
+// コマンド
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+

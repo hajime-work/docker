@@ -1,0 +1,27 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// POSTFIX (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+FROM archlinux/base
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
+// インストール
+RUN pacman -Syy --noconfirm php
+
+RUN cd /usr/local/lib && wget 'http://downloads.sourceforge.net/project/postfixadmin/postfixadmin/postfixadmin-2.92/postfixadmin-2.92.tar.gz' -O - | tar zxvf -
+RUN chmod o+w /usr/local/lib/postfixadmin-2.92/templates_c
+RUN sed -i -e 's/open_basedir/;open_basedir/' /etc/php/php.ini
+RUN echo 'extension=mysqli.so' > /etc/php/conf.d/mysqli.ini && echo 'extension=imap.so' > /etc/php/conf.d/imap.ini
+RUN ln -s /usr/local/lib/postfixadmin-2.92 /postfixadmin
+
+ADD files/init/postfixadmin.sh /startup/
+
+// コマンド
+WORKDIR "/usr/local/lib/postfixadmin-2.92"
+CMD ["php", "-S 0.0.0.0:80"]

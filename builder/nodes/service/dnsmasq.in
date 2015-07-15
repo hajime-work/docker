@@ -1,0 +1,24 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// DNSMASQ (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+// Archlinuxのベースとなる
+FROM archlinux/supervisor
+
+// パッケージをインストール
+RUN pacman -Sy --noconfirm dnsmasq
+
+VOLUME /var/dnsmasq
+
+ADD files/supervisor.d/dnsmasq.ini /etc/supervisor.d/
+ADD files/init/dnsmasq.sh /startup/
+
+RUN pacman -Scc --noconfirm
+
+// コマンド
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]

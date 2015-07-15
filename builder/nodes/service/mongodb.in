@@ -1,0 +1,21 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// mongo (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+// Archlinuxのベースとなる
+FROM archlinux/base
+
+// パッケージをインストール
+RUN pacman -Sy --noconfirm mongodb
+
+RUN cp /etc/mongodb.conf /etc/mongodb.conf.default
+ADD files/init/mongodb.sh /startup/
+
+
+// コマンド
+CMD ["mongod", "-f", "/etc/mongodb.conf"]

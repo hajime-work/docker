@@ -1,0 +1,6 @@
+// vim: set ft=Dockerfile :
+
+// NGINX用のディレクトリをエクスポート
+VOLUME ["/etc/nginx", "/var/log/nginx", "/var/cache/nginx"]
+
+ADD files/init/nginx.sh /startup/

@@ -1,0 +1,4 @@
+RUN echo 'Defaults env_keep += HOME' > /etc/sudoers.d/avap.conf
+RUN echo 'Defaults env_keep += PATH' >> /etc/sudoers.d/avap.conf
+RUN echo 'Defaults env_keep += SSH_AUTH_SOCK' >> /etc/sudoers.d/avap.conf
+RUN echo '%wheel kurari ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/avap.conf

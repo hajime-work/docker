@@ -1,0 +1,23 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// DNSMASQ (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+// Archlinuxのベースとなる
+FROM archlinux/supervisor
+
+// パッケージをインストール
+RUN pacman -Sy --noconfirm bind
+
+VOLUME /var/named
+
+RUN pacman -Scc --noconfirm
+
+ADD files/init/bind.sh /startup/
+
+// コマンド
+CMD ["/usr/sbin/named", "-c", "/var/named/named.conf", "-g"]

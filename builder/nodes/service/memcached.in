@@ -1,0 +1,19 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// Memcached
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+// Archlinuxのベースとなる
+FROM archlinux/base
+
+// パッケージをインストール
+RUN pacman -Sy --noconfirm memcached
+
+//RUN useradd memcached
+
+// コマンド
+CMD ["memcached", "-u", "memcached"]

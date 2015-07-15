@@ -1,0 +1,20 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// Git
+// -----------------------------------------
+// + gitolite
+//
+//
+//-------------------------------------------
+
+FROM  archlinux/supervisor
+
+ADD files/supervisor.d/ssh.ini /etc/supervisor.d/
+ADD files/init/gitolite.sh /startup/
+ADD files/init/ssh.sh /startup/
+
+VOLUME /home/git
+
+
+// コマンド
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]

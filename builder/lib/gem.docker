@@ -1,0 +1,4 @@
+// gemインストール設定
+ENV HOME /root
+RUN echo "gem: --no-user-install --no-ri --no-rdoc" > /root/.gemrc
+// vim: set ft=Dockerfile :

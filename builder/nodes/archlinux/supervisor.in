@@ -1,0 +1,21 @@
+// vim: set ft=Dockerfile :
+//-------------------------------------------
+// スーパーバイザ
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+FROM archlinux/base
+MAINTAINER __MAINTAINER__
+
+// 標準装備アプリケーションをインストール
+RUN pacman -Sy --noconfirm supervisor
+
+RUN [ -d /etc/supervisor.d ] || mkdir /etc/supervisor.d
+ADD files/supervisor.d/supervisor.ini /etc/supervisor.d/
+
+
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+// vim: set ft=Dockerfile :

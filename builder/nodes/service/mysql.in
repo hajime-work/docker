@@ -1,0 +1,26 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// DNSMASQ (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+// Archlinuxのベースとなる
+FROM archlinux/base
+
+// パッケージをインストール
+RUN pacman -Syy --noconfirm mysql
+
+
+ADD files/init/mysql.sh /startup/
+
+RUN mkdir -p /origin/etc && cp -a /etc/mysql /origin/etc/mysql
+
+// ディレクトリをエクスポート
+VOLUME ["/etc/mysql"]
+
+// コマンド
+
+CMD ["/usr/bin/mysqld_safe", "--defaults-file=/etc/mysql/my.conf"]

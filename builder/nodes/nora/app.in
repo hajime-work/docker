@@ -1,0 +1,80 @@
+// vim: set ft=dockerfile :
+//===================================
+// Nora/Appサーバ
+//-----------------------------------
+//
+//
+//===================================
+
+// Archlinuxのベースとなる
+FROM archlinux/supervisor
+
+// PHPのコンパイル
+ADD files/archlinux/php /php
+WORKDIR /php
+RUN make && make install
+
+
+// 使用するアプリケーションのインストール
+RUN pacman -S --noconfirm \
+        mongodb \
+        redis \
+        nginx \
+        nodejs \
+        npm \
+        memcached \
+        libmemcached \
+
+
+// GEMのインストール
+#include "../../lib/gem.docker"
+
+// CoffeeScriptのインストール
+RUN npm install coffee-script -g
+
+//===========================================
+// PHPの拡張
+//===========================================
+
+// Redis
+RUN pecl install redis
+RUN echo extension=redis.so | tee /opt/php/etc/conf.d/redis.ini
+
+// Mongo
+RUN pecl install mongo
+RUN echo extension=mongo.so | tee /opt/php/etc/conf.d/mongo.ini
+
+// Memcached
+RUN pecl install memcached
+RUN echo extension=memcached.so | tee /opt/php/etc/conf.d/memcached.ini
+
+// XDEBUG
+RUN pecl install xdebug
+RUN echo 'zend_extension=/opt/php/lib/php/extensions/no-debug-zts-20131226/xdebug.so' | tee /opt/php/etc/conf.d/xdebug.ini
+
+// Twig
+RUN pear channel-discover pear.twig-project.org
+RUN pear install twig/Twig
+
+//===========================================
+// TOOL
+//===========================================
+RUN gem install sass compass
+
+//===========================================
+// サービス起動スクリプト
+//===========================================
+
+// FPM
+ADD files/init/php-fpm.sh /startup/
+ADD files/supervisor.d/php-fpm.ini /etc/supervisor.d/
+
+// Nginx
+RUN mkdir -p /origin/etc
+RUN cp -a /etc/nginx /origin/etc/nginx 
+VOLUME ["/etc/nginx", "/var/log/nginx", "/var/cache/nginx"]
+ADD files/init/nginx.sh /startup/
+ADD files/supervisor.d/nginx.ini /etc/supervisor.d/
+
+// コマンド
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
