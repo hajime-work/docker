@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# BIND
+#
+source ./config/vars
+
+MODE=$1
+DATA=${CONFIG_DIR}/mysql
+IMAGE=service/mysql
+NAME=${INSTANCE_PREFIX}mysql
+OPTIONS=${BIND_INSTANCE_OPTIONS}
+
+case $MODE in
+name)
+    echo $NAME
+    ;;
+run)
+    echo "STARTING ".$NAME
+    docker run \
+        -v ${CONFIG_DIR}/${NAME}:/etc/mysql \
+        -v $VAR_DATA/${NAME}/data:/var/lib/mysql \
+        -v $VAR_DATA/${NAME}/log:/var/log/mysql \
+        --name $NAME \
+        --dns $(nd-ip dns) \
+        -d service/mysql && {
+            $0 up
+        }
+    ;;
+up)
+    echo address="/${NAME}/$(nd-ip $NAME)" |\
+        nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
+    nd-ctrl dns restart all
+    ;;
+stop)
+    docker stop -t 2 $NAME
+    docker rm $NAME
+    ;;
+esac
+

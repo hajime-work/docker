@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# NGINX-GW
+#
+source ./config/vars
+
+MODE=$1
+DATA=${CONFIG_DIR}/$(basename $0)
+IMAGE=service/$(basename $0)
+NAME=${INSTANCE_PREFIX}$(basename $0)
+OPTIONS=
+OPTIONS="${OPTIONS} -p 80:80 -p 443:443/udp"
+OPTIONS="${OPTIONS} -v ${DATA}:/etc/nginx"
+OPTIONS="${OPTIONS} --dns $(nd-ip dns)"
+OPTIONS="${OPTIONS} --name ${NAME}"
+OPTIONS="${OPTIONS} --hostname ${NAME}"
+
+case $MODE in
+name)
+    echo $NAME
+    ;;
+run)
+    echo "STARTING ".$NAME
+    docker run -d \
+        $OPTIONS \
+        service/nginx  && {
+            echo start with ${CONFIG_DIR}/${NAME}
+            $0 up
+        }
+    ;;
+test)
+    shift;
+    docker run \
+        $OPTIONS \
+        --rm \
+        -it service/nginx $*
+    ;;
+stop)
+    docker stop -t 2 $NAME
+    docker rm $NAME
+    ;;
+up)
+    echo address="/${NAME}/$(nd-ip $NAME)" |\
+        nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
+    nd-ctrl dns restart all
+    ;;
+esac

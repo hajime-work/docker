@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Nora Docker
+#
+#
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=$1
+shift;
+
+[ "$NAME" == "" ] && exit 1
+
+for file in $PATH_LIST
+do
+    [ "$NAME" == "$(basename $file)" ] && {
+        INS=$($file name)
+        VIM_INS="${INS}-VIM"
+
+        docker start $VIM_INS || {
+            docker run -it --volumes-from $INS -v $HOME:/root -e HOME=/root service/vim $*
+        }
+    }
+done

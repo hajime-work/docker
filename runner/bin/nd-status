@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# Nora Docker List
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+for file in $PATH_LIST
+do
+    echo -n $($file name) 
+    echo -ne "\t\t"
+    IP=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' $($file name) 2> /dev/null)
+    if [ "$?" == 0 ]; then
+        echo $IP
+    else
+        echo 'Not Running'
+    fi
+
+done
+

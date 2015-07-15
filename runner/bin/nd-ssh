@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Nora Docker
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=$1
+shift;
+
+[ "$NAME" == "" ] && exit 1
+
+ssh $* -A $(nd-ip $NAME)

@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Nora Docker List
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+for file in $PATH_LIST
+do
+    echo $file
+done
+

@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# POSTFIX-GW
+#
+source ./config/vars
+
+MODE=$1
+DATA=${CONFIG_DIR}/$(basename $0)
+IMAGE=service/$(basename $0)
+NAME=${INSTANCE_PREFIX}$(basename $0)
+OPTIONS=
+OPTIONS="$OPTIONS -v ${VAR_DATA}/${NAME}/spool/postfix:/var/spool/postfix"
+OPTIONS="$OPTIONS -v ${CONFIG_DIR}/${NAME}/etc/postfix:/etc/postfix"
+
+case $MODE in
+name)
+    echo $NAME
+    ;;
+run)
+    echo "STARTING ".$NAME
+    docker run -d \
+        -v ${CONFIG_DIR}/${NAME}:/etc/postfix  \
+        -v ${VAR_DATA}/${NAME}/spool:/var/spool/postfix \
+        -p 25:25 \
+        --dns $(nd-ip dns) \
+        --name $NAME \
+        service/postfix && {
+            echo start with ${CONFIG_DIR}/${NAME}
+            $0 up
+        }
+    ;;
+stop)
+    docker stop -t 2 $NAME
+    docker rm $NAME
+    ;;
+up)
+    echo address="/${NAME}/$(nd-ip $NAME)" |\
+        nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
+    echo address="/${NAME}.local/$(nd-ip $NAME)" |\
+        nd-pipe dns sh -c "cat - >> /var/dnsmasq/conf.d/$NAME.conf"
+    nd-ctrl dns restart all
+    ;;
+esac
+

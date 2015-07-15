@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# BIND
+#
+source ./config/vars
+
+MODE=$1
+DATA=${CONFIG_DIR}/$(basename $0)
+IMAGE=service/$(basename $0)
+NAME=${INSTANCE_PREFIX}$(basename $0)
+OPTIONS=${BIND_INSTANCE_OPTIONS}
+
+case $MODE in
+name)
+    echo $NAME
+    ;;
+run)
+    echo "STARTING ".$NAME
+    docker run $OPTIONS \
+        -v ${CONFIG_DIR}/${NAME}/master:/var/named \
+        --privileged \
+        --name $NAME \
+        --hostname $NAME \
+        -d $IMAGE
+    ;;
+stop)
+    docker stop -t 2 $NAME
+    docker rm $NAME
+    ;;
+esac
+

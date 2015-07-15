@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Nora Docker Stop
+#
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=${1:-all}
+
+case $NAME in
+*)
+    for file in $PATH_LIST
+    do
+        [ "$NAME" == "$(basename $file)" ] && {
+        $file stop
+
+        if  [ "$?" == "200" ]; then
+            echo $file
+            docker stop -t 2 $( $file  name )
+            docker rm $( $file name )
+        fi
+        }
+    done
+    ;;
+all)
+    for file in *.d/*
+    do
+        $file stop
+    done
+    ;;
+esac

@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Nora Docker Run!!!
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=${1}
+shift;
+
+for file in $PATH_LIST
+do
+    [ "$NAME" == "$(basename $file)" ] && {
+        $file test $*
+        [ $? -eq 200 ] && {
+            docker run --rm -it \
+                $($file options) \
+                $($file image) $*
+        }
+    }
+done

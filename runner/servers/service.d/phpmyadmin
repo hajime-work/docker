@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# PHPMYADMIN
+#
+source ./config/vars
+
+MODE=$1
+DATA=${CONFIG_DIR}/$(basename $0)
+IMAGE=service/phpmyadmin
+NAME=${INSTANCE_PREFIX}$(basename $0)
+OPTIONS=
+[ -d ${CONFIG_DIR}/${NAME} ] || mkdir -p ${CONFIG_DIR}/${NAME}
+touch ${CONFIG_DIR}/${NAME}/config.inc.php
+OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/config.inc.php:/phpMyAdmin-4.4.9-all-languages/config.inc.php"
+OPTIONS="${OPTIONS} --dns $(nd-ip dns)"
+OPTIONS="${OPTIONS} --name ${NAME}"
+OPTIONS="${OPTIONS} --hostname ${NAME}"
+OPTIONS="${OPTIONS} -p 1088:80"
+
+case $MODE in
+name)
+    echo $NAME
+    ;;
+options)
+    echo $OPTIONS
+    ;;
+image)
+    echo $IMAGE
+    ;;
+*)
+    exit 200
+esac

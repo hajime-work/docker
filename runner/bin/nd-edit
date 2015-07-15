@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Nora Docker
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=$1
+shift;
+
+[ "$NAME" == "" ] && exit 1
+
+for file in $PATH_LIST
+do
+    [ "$NAME" == "$(basename $file)" ] && {
+       vim $file
+    }
+done

@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Nora Docker
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=$1
+shift;
+
+[ "$NAME" == "" ] && exit 1
+
+for file in $PATH_LIST
+do
+    [ "$NAME" == "$(basename $file)" ] && {
+        echo $*
+        cat - | docker exec -i $($file name) sh -c "${*:-bash}"
+    }
+done

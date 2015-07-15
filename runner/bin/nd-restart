@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Nora Docker 
+#
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+for NAME in $*
+do
+case $NAME in
+*)
+    for file in $PATH_LIST
+    do
+        [ "$NAME" == "$(basename $file)" ] && {
+        nd-stop $NAME
+        nd-run $NAME
+        }
+    done
+    ;;
+all)
+    for file in $PATH_LIST
+    do
+        $file stop
+        $file run
+    done
+esac
+done

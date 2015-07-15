@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Nora Docker
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=${1:-all}
+
+case $NAME in
+*)
+    for file in $PATH_LIST
+    do
+        [ "$NAME" == "$(basename $file)" ] && {
+        $file up
+            if [ "$?" == "200" ]
+            then
+                echo address="/$NAME/$(nd-ip $NAME)" |\
+                    nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
+                echo address="/${NAME}.local/$(nd-ip $NAME)" |\
+                    nd-pipe dns sh -c "cat - >> /var/dnsmasq/conf.d/$NAME.conf"
+                nd-ctrl dns restart all
+            fi
+        }
+    done
+    ;;
+all)
+    for file in *.d/*
+    do
+        $file up
+    done
+
+    for file in local.d/*
+    do
+        $file up
+    done
+    ;;
+esac

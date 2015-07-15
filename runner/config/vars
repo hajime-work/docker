@@ -1,0 +1,10 @@
+#!/bin/bash
+CONFIG_DIR=/docker/data
+VAR_DATA=/export/server
+INSTANCE_PREFIX=
+
+# server file paths
+PATH_LIST=$(find servers/*.d/* -type f)
+
+# 環境変数にND_DIRを追加するとパスリストへ追加する用に
+[ "$ND_DIR" == "" ] || PATH_LIST="$PATH_LIST $(find $ND_DIR -type f)"

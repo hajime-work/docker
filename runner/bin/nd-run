@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Nora Docker Run!!!
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+NAME=${1:-all}
+
+case $NAME in
+*)
+    for file in $PATH_LIST
+    do
+        [ "$NAME" == "$(basename $file)" ] && {
+            $file run
+            [ "$?" == "200" ] && {
+                docker run -d \
+                    $($file options) \
+                    $($file image)  && {
+                        ND_DIR=$ND_DIR nd-up $NAME
+                        echo ND_DIR=$ND_DIR nd-up $NAME
+                    }
+            }
+        }
+    done
+    ;;
+all)
+    for file in *.d/*
+    do
+        $file run
+    done
+
+    ;;
+esac
