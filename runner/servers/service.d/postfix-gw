@@ -6,39 +6,32 @@ source ./config/vars
 
 MODE=$1
 DATA=${CONFIG_DIR}/$(basename $0)
-IMAGE=service/$(basename $0)
+IMAGE=service/postfix
 NAME=${INSTANCE_PREFIX}$(basename $0)
+
 OPTIONS=
-OPTIONS="$OPTIONS -v ${VAR_DATA}/${NAME}/spool/postfix:/var/spool/postfix"
-OPTIONS="$OPTIONS -v ${CONFIG_DIR}/${NAME}/etc/postfix:/etc/postfix"
+OPTIONS="$OPTIONS --volumes-from ${NAME}.volumes"
+OPTIONS="$OPTIONS -p 25:25 "
+OPTIONS="$OPTIONS --dns $(nd-ip dns) "
+OPTIONS="$OPTIONS --name ${NAME}"
+OPTIONS="$OPTIONS --hostname ${NAME}"
 
 case $MODE in
 name)
     echo $NAME
     ;;
+image)
+    echo $IMAGE
+    ;;
+options)
+    echo $OPTIONS
+    ;;
 run)
-    echo "STARTING ".$NAME
-    docker run -d \
-        -v ${CONFIG_DIR}/${NAME}:/etc/postfix  \
-        -v ${VAR_DATA}/${NAME}/spool:/var/spool/postfix \
-        -p 25:25 \
-        --dns $(nd-ip dns) \
-        --name $NAME \
-        service/postfix && {
-            echo start with ${CONFIG_DIR}/${NAME}
-            $0 up
-        }
+    docker create --name ${NAME}.volumes  -v /etc/postfix -v /var/spool/postfix busybox
+    exit 200
     ;;
-stop)
-    docker stop -t 2 $NAME
-    docker rm $NAME
-    ;;
-up)
-    echo address="/${NAME}/$(nd-ip $NAME)" |\
-        nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
-    echo address="/${NAME}.local/$(nd-ip $NAME)" |\
-        nd-pipe dns sh -c "cat - >> /var/dnsmasq/conf.d/$NAME.conf"
-    nd-ctrl dns restart all
+*)
+    exit 200
     ;;
 esac
 

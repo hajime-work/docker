@@ -18,4 +18,4 @@ VOLUME ["/var/log/redis"]
 ADD files/init/redis.sh /startup/
 
 // コマンド
-CMD ["/usr/sbin/redis-server", "/etc/redis.conf"]
+CMD ["/usr/sbin/redis-server", "/etc/redis/redis.conf"]

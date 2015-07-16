@@ -10,7 +10,7 @@ prepare: php-$(VARSION)/.sentinel
 	cd php-$(VARSION); make
 
 php-$(VARSION)/.sentinel:
-	wget http://jp1.php.net/get/php-$(VARSION).tar.bz2/from/this/mirror -O php-$(VARSION).tar.bz2
+	wget http://jp2.php.net/get/php-$(VARSION).tar.bz2/from/this/mirror -O php-$(VARSION).tar.bz2
 	tar jxvf php-$(VARSION).tar.bz2
 	touch $@
 

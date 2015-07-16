@@ -8,7 +8,10 @@ MODE=$1
 DATA=${CONFIG_DIR}/$(basename $0)
 IMAGE=service/$(basename $0)
 NAME=${INSTANCE_PREFIX}$(basename $0)
-OPTIONS=${BIND_INSTANCE_OPTIONS}
+
+OPTIONS=""
+OPTIONS="${OPTIONS} --volumes-from ${NAME}.volumes"
+OPTIONS="${OPTIONS} --volumes-from ${NAME}.volumes"
 
 VOLUEMS="-v /var/named"
 
@@ -17,8 +20,7 @@ name)
     echo $NAME
     ;;
 run)
-    echo "STARTING ".$NAME
-    docker run ${VOLUMES} --name ${NAME}.voluems busybox
+    docker create ${VOLUMES} --name ${NAME}.voluems busybox
 
     docker run $OPTIONS \
         --volumes-from ${NAME}.volumes

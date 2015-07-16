@@ -9,8 +9,8 @@ DATA=${CONFIG_DIR}/$(basename $0)
 IMAGE=service/phpmyadmin
 NAME=${INSTANCE_PREFIX}$(basename $0)
 OPTIONS=
-[ -d ${CONFIG_DIR}/${NAME} ] || mkdir -p ${CONFIG_DIR}/${NAME}
-touch ${CONFIG_DIR}/${NAME}/config.inc.php
+#[ -d ${CONFIG_DIR}/${NAME} ] || mkdir -p ${CONFIG_DIR}/${NAME}
+#touch ${CONFIG_DIR}/${NAME}/config.inc.php
 OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/config.inc.php:/phpMyAdmin-4.4.9-all-languages/config.inc.php"
 OPTIONS="${OPTIONS} --dns $(nd-ip dns)"
 OPTIONS="${OPTIONS} --name ${NAME}"

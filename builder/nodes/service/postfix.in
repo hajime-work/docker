@@ -9,6 +9,7 @@
 
 FROM archlinux/base
 
+RUN pacman-key --refresh-keys
 
 // インストール
 RUN pacman -Syy --noconfirm postfix rsyslog cyrus-sasl
@@ -17,14 +18,13 @@ RUN pacman -Syy --noconfirm postfix rsyslog cyrus-sasl
 VOLUME ["/etc/postfix", "/var/log"]
 
 // SPF
-RUN apacman -Sy
-RUN apacman -S python-postfix-policyd-spf --noconfirm
+RUN apacman -Sy python-postfix-policyd-spf --noconfirm
 
 // OpenDkim
-RUN pacman -S opendkim --noconfirm
+RUN pacman -Sy opendkim --noconfirm
 
 // Clamav
-RUN pacman -S clamav --noconfirm 
+RUN pacman -Sy clamav --noconfirm 
 
 ADD files/init/postfix.sh /startup/
 

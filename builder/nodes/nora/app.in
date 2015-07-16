@@ -9,6 +9,8 @@
 // Archlinuxのベースとなる
 FROM archlinux/supervisor
 
+RUN pacman -S --noconfirm apache
+
 // PHPのコンパイル
 ADD files/archlinux/php /php
 WORKDIR /php

@@ -16,7 +16,7 @@ maintainer=nora
 
 # ビルドする関数
 build=cpp -P -o - $(1) |\
-	sed -e -e 's/__DATE__/'$(date)'/' -e 's/__MAINTAINER__/$(maintainer)/' > $w/Dockerfile; \
+	sed -e 's/__DATE__/'$(date)'/' -e 's/__MAINTAINER__/$(maintainer)/' > $w/Dockerfile; \
 	docker build -t $(2):$(date) $w; docker tag -f $(2):$(date) $(2):latest
 
 # Archlinux

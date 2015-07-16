@@ -18,4 +18,4 @@ ADD files/init/mongodb.sh /startup/
 
 
 // コマンド
-CMD ["mongod", "-f", "/etc/mongodb.conf"]
+CMD ["mongod", "-f", "/etc/mongodb/mongodb.conf"]

@@ -19,6 +19,7 @@ OPTIONS="${OPTIONS} --volumes-from ${SHARE}"
 
 VOLUMES="--name ${NAME_VOLUMES}"
 VOLUMES="${VOLUMES} -v /var/dnsmasq"
+VOLUMES="${VOLUMES} -v /etc/dnsmasq.d"
 
 case $MODE in
 name)
@@ -48,7 +49,7 @@ update)
     shift
     NAME=$1
     shift
-    docker run -it --volumes-from ${NAME_VOLUMES} busybox sh -c "echo $* > /var/dnsmasq/${NAME}.conf"
+    docker run -it --volumes-from ${NAME_VOLUMES} busybox sh -c "echo $* > /etc/dnsmasq.d/${NAME}.conf"
     ;;
 stop)
     docker stop -t 2 $NAME

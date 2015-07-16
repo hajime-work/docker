@@ -9,8 +9,6 @@ DATA=${CONFIG_DIR}/$(basename $0)
 IMAGE=service/openldap
 NAME=${INSTANCE_PREFIX}$(basename $0)
 
-mkdir -p ${CONFIG_DIR}/${NAME}
-touch ${CONFIG_DIR}/${NAME}/slapd.conf
 
 OPTIONS=
 OPTIONS="${OPTIONS} --dns $(nd-ip dns)"

@@ -8,3 +8,5 @@ source ./config/vars
 # 全インスタンス共通させるデータ
 docker create --name share -v /share busybox
 
+# DNSを起動する
+nd-run dns
