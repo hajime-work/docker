@@ -19,8 +19,9 @@ VOLUMES="${VOLUMES} -v ${DATA}:/etc/nginx"
 VOLUMES="${VOLUMES} -v ${DATA}/var/cache:/var/cache/nginx"
 
 case $MODE in
-volumes)
-    docker run --name ${NAME}.volumes $VOLUMES busybox
+run)
+    docker run --name ${NAME}.volumes $VOLUMES busybox 2> /dev/null || echo 'data exists?'
+    exit 200
     ;;
 name)
     echo $NAME

@@ -10,14 +10,18 @@ IMAGE=service/$(basename $0)
 NAME=${INSTANCE_PREFIX}$(basename $0)
 OPTIONS=${BIND_INSTANCE_OPTIONS}
 
+VOLUEMS="-v /var/named"
+
 case $MODE in
 name)
     echo $NAME
     ;;
 run)
     echo "STARTING ".$NAME
+    docker run ${VOLUMES} --name ${NAME}.voluems busybox
+
     docker run $OPTIONS \
-        -v ${CONFIG_DIR}/${NAME}/master:/var/named \
+        --volumes-from ${NAME}.volumes
         --privileged \
         --name $NAME \
         --hostname $NAME \

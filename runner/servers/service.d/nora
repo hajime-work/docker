@@ -9,43 +9,36 @@ DATA=${CONFIG_DIR}/$(basename $0)
 IMAGE=nora/dev
 NAME=${INSTANCE_PREFIX}$(basename $0)
 OPTIONS=
-OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/php-fpm.conf:/opt/php/etc/php-fpm.conf"
-OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/nginx:/etc/nginx"
-OPTIONS="${OPTIONS} -v $VAR_DATA/${NAME}/home:/home"
-OPTIONS="${OPTIONS} -v $VAR_DATA/${NAME}/proxy:/var/lib/nginx/proxy"
-OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/startup:/startup/local"
-OPTIONS="${OPTIONS} -v /etc/skel:/etc/skel"
 OPTIONS="${OPTIONS} --dns $(nd-ip dns)"
 OPTIONS="${OPTIONS} --name ${NAME}"
 OPTIONS="${OPTIONS} --hostname ${NAME}"
+OPTIONS="${OPTIONS} --volumes-from ${NAME}.volumes"
 OPTIONS="${OPTIONS} -p 7080:80"
 OPTIONS="${OPTIONS} -p 7081:8080"
 OPTIONS="${OPTIONS} -p 7222:22"
+
+VOLUMES=
+VOLUMES="${VOLUMES} -v /opt/php/etc/php-fpm"
+VOLUMES="${VOLUMES} -v /etc/nginx"
+VOLUMES="${VOLUMES} -v /home"
+VOLUMES="${VOLUMES} -v /var/lib/nginx/proxy"
+VOLUMES="${VOLUMES} -v /startup/local"
 
 case $MODE in
 name)
     echo $NAME
     ;;
-run)
-    docker run -d \
-        $OPTIONS \
-        $IMAGE  && {
-            $0 up
-        }
+image)
+    echo $IMAGE
     ;;
-test)
+options)
     echo $OPTIONS
-    docker run --rm -it \
-        $OPTIONS \
-        $IMAGE
     ;;
-up)
-    echo address="/${NAME}/$(nd-ip $NAME)" |\
-        nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
-    nd-ctrl dns restart all
+run)
+    docker create ${VOLUMES} --name ${NAME}.volumes busybox 
+    exit 200
     ;;
-stop)
-    docker stop -t 2 $NAME
-    docker rm $NAME
+*)
+    exit 200
     ;;
 esac

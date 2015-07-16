@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Nora Docker: 初期処理
+#
+cd $(dirname $0)/..;
+source ./config/vars
+
+# 全インスタンス共通させるデータ
+docker create --name share -v /share busybox
+

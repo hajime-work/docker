@@ -8,7 +8,17 @@ MODE=$1
 DATA=${CONFIG_DIR}/dnsmasq
 IMAGE=service/dnsmasq
 NAME=${INSTANCE_PREFIX}dns
+NAME_VOLUMES=${NAME}.volumes
 OPTIONS=${DNS_INSTANCE_OPTIONS}
+
+OPTIONS="${OPTIONS} --privileged"
+OPTIONS="${OPTIONS} --name $NAME"
+OPTIONS="${OPTIONS} --hostname $NAME"
+OPTIONS="${OPTIONS} --volumes-from ${NAME_VOLUMES}"
+OPTIONS="${OPTIONS} --volumes-from ${SHARE}"
+
+VOLUMES="--name ${NAME_VOLUMES}"
+VOLUMES="${VOLUMES} -v /var/dnsmasq"
 
 case $MODE in
 name)
@@ -16,12 +26,10 @@ name)
     ;;
 run)
     # DNSMASQ
-    echo "STARTING ".$NAME
+    echo "STARTING "$NAME
+    docker run  $VOLUMES busybox 2> /dev/null || echo 'VOLUME EXISTS'
+
     docker run -d $OPTIONS \
-        -v ${CONFIG_DIR}/${NAME}:/var/dnsmasq \
-        --privileged \
-        --name $NAME \
-        --hostname $NAME \
         $IMAGE && {
             $0 up
         }
@@ -31,10 +39,16 @@ up)
     docker \
         inspect \
         -f '{{.NetworkSettings.IPAddress}}' $NAME)
-    echo nameserver $IP > /etc/resolv.conf
-    echo nameserver 8.8.8.8 >> /etc/resolv.conf
-    echo nameserver 8.8.4.4 >> /etc/resolv.conf
+    echo nameserver $IP     | sudo tee /etc/resolv.conf
+    echo nameserver 8.8.8.8 | sudo tee -a /etc/resolv.conf
+    echo nameserver 8.8.4.4 | sudo tee -a /etc/resolv.conf
     nd-ctrl dns status
+    ;;
+update)
+    shift
+    NAME=$1
+    shift
+    docker run -it --volumes-from ${NAME_VOLUMES} busybox sh -c "echo $* > /var/dnsmasq/${NAME}.conf"
     ;;
 stop)
     docker stop -t 2 $NAME

@@ -15,10 +15,8 @@ case $NAME in
         $file up
             if [ "$?" == "200" ]
             then
-                echo address="/$NAME/$(nd-ip $NAME)" |\
-                    nd-pipe dns sh -c "cat - > ${CONFIG_DIR}/dns/conf.d/$NAME.conf"
-                echo address="/${NAME}.local/$(nd-ip $NAME)" |\
-                    nd-pipe dns sh -c "cat - >> ${CONFIG_DIR}/dns/conf.d/$NAME.conf"
+                nd-cmd dns update $NAME address="/$NAME/$(nd-ip $NAME)"
+                nd-cmd dns update ${NAME}.local address="/${NAME}.local/$(nd-ip $NAME)"
                 nd-ctrl dns restart all
             fi
         }

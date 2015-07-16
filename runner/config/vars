@@ -2,6 +2,7 @@
 CONFIG_DIR=/docker/data
 VAR_DATA=/export/server
 INSTANCE_PREFIX=
+SHARE=share
 
 # server file paths
 PATH_LIST=$(find servers/*.d/* -type f)

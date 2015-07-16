@@ -13,17 +13,19 @@ mkdir -p ${CONFIG_DIR}/${NAME}
 touch ${CONFIG_DIR}/${NAME}/slapd.conf
 
 OPTIONS=
-OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/slapd.conf:/etc/openldap/slapd.conf"
-OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/startup:/startup/local"
-OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/slapd.d:/etc/openldap/slapd.d"
-OPTIONS="${OPTIONS} -v ${CONFIG_DIR}/${NAME}/openldap-data:/var/lib/openldap/openldap-data"
-OPTIONS="${OPTIONS} -v /etc/skel:/etc/skel"
 OPTIONS="${OPTIONS} --dns $(nd-ip dns)"
 OPTIONS="${OPTIONS} --name ${NAME}"
 OPTIONS="${OPTIONS} --hostname ${NAME}"
+OPTIONS="${OPTIONS} --volumes-from ${NAME}.volumes"
 #OPTIONS="${OPTIONS} -p 389:389"                                      # Ldapを公開する
 
+VOLUMES=
+VOLUMES="${VOLUMES} -v /etc/openldap/slapd.conf"
+VOLUMES="${VOLUMES} -v /startup/local"
+VOLUMES="${VOLUMES} -v /etc/openldap/slapd.d"
+VOLUMES="${VOLUMES} -v /var/lib/openldap/openldap-data"
 case $MODE in
+
 name)
     echo $NAME
     ;;
@@ -32,6 +34,10 @@ options)
     ;;
 image)
     echo $IMAGE
+    ;;
+run)
+    docker creat ${VOLUMES} --name ${NAME}.volumes busybox
+    exit 200
     ;;
 *)
     exit 200
