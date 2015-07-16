@@ -6,42 +6,32 @@ source ./config/vars
 
 MODE=$1
 DATA=${CONFIG_DIR}/$(basename $0)
-IMAGE=service/$(basename $0)
+IMAGE=service/nginx
 NAME=${INSTANCE_PREFIX}$(basename $0)
 OPTIONS=
-OPTIONS="${OPTIONS} -p 80:80 -p 443:443/udp"
-OPTIONS="${OPTIONS} -v ${DATA}:/etc/nginx"
+OPTIONS="${OPTIONS} -p 80:80 -p 443:443"
 OPTIONS="${OPTIONS} --dns $(nd-ip dns)"
 OPTIONS="${OPTIONS} --name ${NAME}"
 OPTIONS="${OPTIONS} --hostname ${NAME}"
+OPTIONS="${OPTIONS} --volumes-from ${NAME}.volumes"
+
+VOLUMES="${VOLUMES} -v ${DATA}:/etc/nginx"
+VOLUMES="${VOLUMES} -v ${DATA}/var/cache:/var/cache/nginx"
 
 case $MODE in
+volumes)
+    docker run --name ${NAME}.volumes $VOLUMES busybox
+    ;;
 name)
     echo $NAME
     ;;
-run)
-    echo "STARTING ".$NAME
-    docker run -d \
-        $OPTIONS \
-        service/nginx  && {
-            echo start with ${CONFIG_DIR}/${NAME}
-            $0 up
-        }
+image)
+    echo $IMAGE
     ;;
-test)
-    shift;
-    docker run \
-        $OPTIONS \
-        --rm \
-        -it service/nginx $*
+options)
+    echo $OPTIONS
     ;;
-stop)
-    docker stop -t 2 $NAME
-    docker rm $NAME
-    ;;
-up)
-    echo address="/${NAME}/$(nd-ip $NAME)" |\
-        nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
-    nd-ctrl dns restart all
+*)
+    exit 200
     ;;
 esac

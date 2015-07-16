@@ -19,7 +19,7 @@ do
         VIM_INS="${INS}-VIM"
 
         docker start $VIM_INS || {
-            docker run -it --volumes-from $INS -v $HOME:/root -e HOME=/root service/vim $*
+            docker run -it --volumes-from $INS -e HOME=/root service/vim $*
         }
     }
 done

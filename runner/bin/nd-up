@@ -16,9 +16,9 @@ case $NAME in
             if [ "$?" == "200" ]
             then
                 echo address="/$NAME/$(nd-ip $NAME)" |\
-                    nd-pipe dns sh -c "cat - > /var/dnsmasq/conf.d/$NAME.conf"
+                    nd-pipe dns sh -c "cat - > ${CONFIG_DIR}/dns/conf.d/$NAME.conf"
                 echo address="/${NAME}.local/$(nd-ip $NAME)" |\
-                    nd-pipe dns sh -c "cat - >> /var/dnsmasq/conf.d/$NAME.conf"
+                    nd-pipe dns sh -c "cat - >> ${CONFIG_DIR}/dns/conf.d/$NAME.conf"
                 nd-ctrl dns restart all
             fi
         }
