@@ -1,4 +1,4 @@
-// vim: set ft=Dockerfile :
+// vim: set ft=dockerfile :
 //-------------------------------------------
 // アークリナックスに最低限の設定を施す
 // -----------------------------------------
@@ -16,7 +16,7 @@ ADD files/archlinux/mirrorlist /etc/pacman.d/mirrorlist
 // 日本対応(言語と時刻)
 RUN echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen; \
         locale-gen; \
-        echo "LANG=en_US.utf8" > /etc/locale.conf; \
+        echo "LANG=ja-JP.UTF-8" > /etc/locale.conf; \
         ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 ENV BUILD_DATE __DATE__
