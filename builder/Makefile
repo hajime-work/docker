@@ -20,7 +20,7 @@ build=cpp -P -o - $(1) |\
 	docker build -t $(2):$(date) $w; docker tag -f $(2):$(date) $(2):latest
 
 
-base: archlinux/mini archlinux/base archlinux/supervisor service/dns service/http-gw
+base: archlinux/mini archlinux/base archlinux/supervisor service/dnsmasq service/http-gw
 
 # Archlinux
 archlinux/%: nodes/archlinux/%.in
