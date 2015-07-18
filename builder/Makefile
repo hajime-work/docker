@@ -11,13 +11,14 @@
 w=$(realpath workspace)
 
 # メタ情報
-date=$(LANG=C shell date)
+date=$(shell date +%Y%m%d)
 maintainer=nora
 
 # ビルドする関数
 build=cpp -P -o - $(1) |\
 	sed -e 's/__DATE__/'$(date)'/' -e 's/__MAINTAINER__/$(maintainer)/' > $w/Dockerfile; \
 	docker build -t $(2):$(date) $w; docker tag -f $(2):$(date) $(2):latest
+
 
 base: archlinux/mini archlinux/base archlinux/supervisor service/dns service/http-gw
 
