@@ -10,11 +10,6 @@ shift;
 
 [ "$NAME" == "" ] && exit 1
 
-for file in $PATH_LIST
-do
-    [ "$NAME" == "$(basename $file)" ] && {
-    INSTANCE=$($file name)
-        cat - | docker run -i --rm --volumes-from $INSTANCE busybox sh -c 'cat - | tar xvf -'
-       exit 0
-    }
-done
+INSTANCE=$NAME
+cat - | docker run -i --rm --volumes-from $INSTANCE busybox sh -c 'cat - | tar xvf -'
+exit 0

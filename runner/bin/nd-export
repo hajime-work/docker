@@ -10,15 +10,10 @@ shift;
 
 [ "$NAME" == "" ] && exit 1
 
-for file in $PATH_LIST
-do
-    [ "$NAME" == "$(basename $file)" ] && {
-    INSTANCE=$($file name)
-       {
-           echo "tar cvf - \\";
-           docker inspect $INSTANCE | grep "/vfs/dir/" | awk -F: '{print $1" \\"}'
-               echo ""
-       } | docker run -i --rm --volumes-from $INSTANCE busybox sh -c 'cat - | sh' 
-       exit 0
-    }
-done
+INSTANCE=$NAME
+{
+   echo "tar cvf - \\";
+   docker inspect $INSTANCE | grep "/vfs/dir/" | awk -F: '{print $1" \\"}'
+       echo ""
+} | docker run -i --rm --volumes-from $INSTANCE busybox sh -c 'cat - | sh' 
+exit 0
