@@ -1,4 +1,4 @@
-// vim: set ft=Dockerfile :
+// vim: set ft=dockerfile :
 //-------------------------------------------
 // スーパーバイザ
 // -----------------------------------------
@@ -18,4 +18,3 @@ ADD files/supervisor.d/supervisor.ini /etc/supervisor.d/
 
 
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
-// vim: set ft=Dockerfile :

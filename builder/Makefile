@@ -11,7 +11,7 @@
 w=$(realpath workspace)
 
 # メタ情報
-date=20150608
+date=`date`
 maintainer=nora
 
 # ビルドする関数
@@ -30,7 +30,7 @@ archlinux/supervisor: nodes/archlinux/supervisor.in
 	$(call build,$<,archlinux/supervisor)
 
 # Service
-service/%: nodes/service/%.in archlinux/supervisor
+service/%: nodes/service/%.in
 	$(call build,$<,$@)
 
 # Nora

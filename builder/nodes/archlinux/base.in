@@ -1,4 +1,4 @@
-// vim: set ft=Dockerfile :
+// vim: set ft=dockerfile :
 //-------------------------------------------
 // アークリナックスに最低限の設定を施す
 // -----------------------------------------
@@ -47,5 +47,3 @@ RUN mkdir /startup
 ENV TERM=xterm
 
 ENTRYPOINT ["/builtin/init.sh"]
-
-// vim: set ft=Dockerfile :
