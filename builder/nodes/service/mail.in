@@ -1,0 +1,26 @@
+// vim: set ft=dockerfile :
+//-------------------------------------------
+// POSTFIX (スタンドアローン)
+// -----------------------------------------
+//
+//
+//
+//-------------------------------------------
+
+FROM service/postfix
+
+RUN pacman-key --refresh-keys
+
+// インストール
+RUN pacman -Syy --noconfirm dovecot mariadb-clients
+
+// VirtualUSer
+RUN groupadd -g 40000 vmail
+RUN useradd -m -d /var/vmail -u 40000 -g vmail vmail
+VOLUME /var/vmail
+
+// Dovecotを使う
+#include "../lib/dovecot.docker"
+
+RUN echo 'smtps  465/tcp' >> /etc/services
+RUN echo 'smtps  465/udp' >> /etc/services

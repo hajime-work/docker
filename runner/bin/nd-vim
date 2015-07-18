@@ -18,8 +18,8 @@ do
         INS=$($file name)
         VIM_INS="${INS}-VIM"
 
-        docker run -v /root/vim.d --name vim.data busybox 2> /dev/null
+        docker create -v /root/vim.d --name vim.data busybox 2> /dev/null
 
-        docker run -it --volumes-from $INS --volumes-from vim.data -e HOME=/root service/vim $*
+        docker run --rm -it --volumes-from $INS --volumes-from vim.data -e HOME=/root service/vim $*
     }
 done
