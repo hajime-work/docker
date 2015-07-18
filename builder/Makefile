@@ -11,7 +11,7 @@
 w=$(realpath workspace)
 
 # メタ情報
-date=`date`
+date=$(LANG=C shell date)
 maintainer=nora
 
 # ビルドする関数
