@@ -14,10 +14,10 @@ OPTIONS="${OPTIONS} --dns $(nd-ip dns)"
 OPTIONS="${OPTIONS} --name ${NAME}"
 OPTIONS="${OPTIONS} --hostname ${NAME}"
 OPTIONS="${OPTIONS} --volumes-from ${NAME}.volumes"
-OPTIONS="${OPTIONS} -v /cache"
+OPTIONS="${OPTIONS} -v /var/cache"
 
 VOLUMES="${VOLUMES} -v ${DATA}:/etc/nginx"
-VOLUMES="${VOLUMES} -v ${DATA}/var/cache:/var/cache/nginx"
+#VOLUMES="${VOLUMES} -v ${DATA}/var/cache:/var/cache/nginx"
 
 case $MODE in
 run)
