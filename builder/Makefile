@@ -37,3 +37,6 @@ service/%: nodes/service/%.in
 # Nora
 nora/%: nodes/nora/%.in
 	$(call build,$<,$@)
+
+%:
+	$(call build,$(FILE),$@)

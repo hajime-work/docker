@@ -23,4 +23,4 @@ VOLUME ["/etc/mysql"]
 
 // コマンド
 
-CMD ["/usr/bin/mysqld_safe", "--defaults-file=/etc/mysql/my.conf"]
+CMD ["/usr/bin/mysqld_safe", "--defaults-file=/etc/mysql/my.cnf"]

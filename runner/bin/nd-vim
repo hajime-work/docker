@@ -21,5 +21,9 @@ do
         docker create -v /root --name vim.volumes busybox 2> /dev/null 
 
         docker run --rm -it --volumes-from $INS --volumes-from vim.volumes -e SHELL=/bin/zsh -e HOME=/root service/vim $*
+        exit 0
     }
+
 done
+
+docker run --rm -it --volumes-from $NAME --volumes-from vim.volumes -e SHELL=/bin/zsh -e HOME=/root service/vim $*
