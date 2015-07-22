@@ -1,0 +1,17 @@
+// vim: set ft=dockerfile :
+//===================================
+// Nora/Appサーバ
+//-----------------------------------
+//
+//
+//===================================
+
+// Archlinuxのベースとなる
+FROM archlinux/supervisor
+
+RUN pacman -S --noconfirm apache
+
+// PHPのコンパイル
+ADD files/archlinux/php /php
+WORKDIR /php
+RUN make

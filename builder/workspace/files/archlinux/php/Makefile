@@ -16,10 +16,10 @@ php-$(VARSION)/.sentinel:
 
 
 install:
-	cd php-$(VARSION);sudo  make install
-	find /opt/php/bin -type f -executable -exec sudo ln -sf {} /usr/bin/ \;
-	find /opt/php/sbin -type f -executable -exec sudo ln -sf {} /usr/sbin/ \;
-	-sudo mkdir /opt/php/etc/conf.d
+	cd php-$(VARSION) && make install
+	find /opt/php/bin -type f -executable -exec ln -sf {} /usr/bin/ \;
+	find /opt/php/sbin -type f -executable -exec ln -sf {} /usr/sbin/ \;
+	-mkdir /opt/php/etc/conf.d
 	make timezone
 
 dist-clean:
@@ -30,25 +30,25 @@ dist-clean:
 phpunit: /usr/local/bin/phpunit
 
 /usr/local/bin/phpunit:
-	sudo wget -O $@ https://phar.phpunit.de/phpunit.phar
-	sudo chmod +x $@
+	wget -O $@ https://phar.phpunit.de/phpunit.phar
+	chmod +x $@
 
 phpdoc: /usr/local/bin/phpdoc
 
 /usr/local/bin/phpdoc:
-	sudo wget -O $@ http://phpdoc.org/phpDocumentor.phar
-	sudo chmod +x $@
+	wget -O $@ http://phpdoc.org/phpDocumentor.phar
+	chmod +x $@
 
 xdebug:
-	sudo git clone -b xdebug_2_3 git@github.com:xdebug/xdebug
+	git clone -b xdebug_2_3 git@github.com:xdebug/xdebug
 	cd xdebug && phpize && ./configure --enable-xdebug && make && cp modules/xdebug.so /opt/php/lib/php/extensions/no-debug-zts-20131226/
-	-sudo pecl install xdebug
-	echo zend_extension=xdebug.so | sudo tee /opt/php/etc/conf.d/xdebug.ini
+	-pecl install xdebug
+	echo zend_extension=xdebug.so | tee /opt/php/etc/conf.d/xdebug.ini
 	php -i | grep xdebug
 
 # 基本設定
 timezone:
-	echo 'date.timezone = Asia/Tokyo' | sudo tee /opt/php/etc/conf.d/timezone.ini
+	echo 'date.timezone = Asia/Tokyo' | tee /opt/php/etc/conf.d/timezone.ini
 
 # 開発者むけ
 devel:

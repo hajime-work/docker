@@ -14,7 +14,9 @@ RUN pacman -S --noconfirm apache
 // PHPのコンパイル
 ADD files/archlinux/php /php
 WORKDIR /php
-RUN make && make install
+RUN make
+RUN make
+RUN make install
 
 
 // 使用するアプリケーションのインストール
