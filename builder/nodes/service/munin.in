@@ -1,0 +1,37 @@
+// vim: set ft=dockerfile :
+//===================================
+// Munin
+//-----------------------------------
+//
+//
+//===================================
+
+// Archlinuxのベースとなる
+FROM archlinux/supervisor
+
+RUN pacman -Syyu --noconfirm
+RUN pacman -S --noconfirm mesa-libgl munin lzo
+RUN pacman -S --noconfirm autoconf
+RUN munin-node-configure --shell | sh
+
+RUN pacman -S --noconfirm cron
+RUN crontab /etc/munin/munin-cron-entry -u munin
+
+VOLUME ["/srv/http/munin", "/etc/munin/munin-conf.d"]
+
+COPY files/supervisor.d/crond.ini /etc/supervisor.d/
+COPY files/init/munin.sh /startup/
+
+// NGINXをインストール
+RUN pacman -Sy --noconfirm nginx
+
+ADD files/supervisor.d/nginx.ini /etc/supervisor.d/
+ADD files/init/nginx.sh /startup/
+
+// NGINX用のディレクトリをエクスポート
+RUN mkdir -p /origin/etc
+RUN cp -a /etc/nginx /origin/etc/nginx
+
+ADD files/init/munin.sh /startup/
+// コマンド
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
