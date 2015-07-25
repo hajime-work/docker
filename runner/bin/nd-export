@@ -15,5 +15,5 @@ INSTANCE=$NAME
    echo "tar cvf - \\";
    docker inspect $INSTANCE | grep "/vfs/dir/" | awk -F: '{print $1" \\"}'
        echo ""
-} | docker run -i --rm --volumes-from $INSTANCE busybox sh -c 'cat - | sh' 
+} | tee | docker run -i --rm --volumes-from $INSTANCE busybox sh -c 'cat - | sh' 
 exit 0

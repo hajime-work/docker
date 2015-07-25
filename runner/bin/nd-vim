@@ -12,13 +12,14 @@ shift;
 
 [ "$NAME" == "" ] && exit 1
 
+docker create -v /root:/root --name vim.volumes busybox 2> /dev/null 
+
 for file in $PATH_LIST
 do
     [ "$NAME" == "$(basename $file)" ] && {
         INS=$($file name)
         VIM_INS="${INS}-VIM"
 
-        docker create -v /root --name vim.volumes busybox 2> /dev/null 
 
         docker run --rm -it --volumes-from $INS --volumes-from vim.volumes -e SHELL=/bin/zsh -e HOME=/root service/vim $*
         exit 0

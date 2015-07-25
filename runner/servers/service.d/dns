@@ -49,7 +49,7 @@ update)
     shift
     NAME=$1
     shift
-    docker run -it --volumes-from ${NAME_VOLUMES} busybox sh -c "echo $* > /etc/dnsmasq.d/${NAME}.conf"
+    docker run --rm -it --volumes-from ${NAME_VOLUMES} busybox sh -c "echo $* > /etc/dnsmasq.d/${NAME}.conf"
     ;;
 stop)
     docker stop -t 2 $NAME
